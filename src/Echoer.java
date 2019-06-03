@@ -33,13 +33,12 @@ public class Echoer extends Thread {
             while (true) {
 
                 String echoString = input.readLine(); // string pobrany od klienta
-                if (echoString.equals("exit")) {
+                int[][] gameboard = ParsingGameboard.parseGameboardFromStringToInt(echoString);
 
-                    break;
-                }
-                output.println("elo z srewera " + echoString); //// wyswietlane na kliencie
-                System.out.println(echoString);
 
+                output.println("tablica legit doszła kumplu" ); //// wyswietlane na kliencie
+
+                printGameboard(gameboard);
             }
 
         } catch (IOException e) {
@@ -53,7 +52,14 @@ public class Echoer extends Thread {
         }
     }
 
-
-
-
+    public void printGameboard(int[][] gameboard) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                System.out.print(gameboard[i][j]);
+            }
+            System.out.println();
+        }
+    }
 }
+
+
