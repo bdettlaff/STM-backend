@@ -4,8 +4,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Echoer extends Thread {
-    private Socket socket;
+public class Serwer extends Thread {
+    private Socket socketP1;
+    private Socket socketP2;
     private int start;
     private int end;
 
@@ -14,8 +15,9 @@ public class Echoer extends Thread {
     public int sumB;
     public int wynik;
 
-    public Echoer(Socket socket) {
-        this.socket = socket;
+    public Serwer(Socket socketP1,Socket socketP2) {
+        this.socketP1 = socketP1;
+        this.socketP2 = socketP2;
     }
 
     @Override
@@ -23,29 +25,31 @@ public class Echoer extends Thread {
 
     public void run() {
 
+        String P1="P1";
+        String P2 ="P2";
+        boolean turn=true;
 
         try {
             //DOBRA PRAKTYKA dawać input jako BufferedReader i output jako PrintWriter
-            BufferedReader input = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader inputP1 = new BufferedReader(
+                    new InputStreamReader(socketP1.getInputStream()));
+            PrintWriter outputP1 = new PrintWriter(socketP1.getOutputStream(), true);
+            BufferedReader inputP2 = new BufferedReader(
+                    new InputStreamReader(socketP2.getInputStream()));
+            PrintWriter outputP2 = new PrintWriter(socketP2.getOutputStream(), true);
 
             while (true) {
 
-                String echoString = input.readLine(); // string pobrany od klienta
-                int[][] gameboard = ParsingGameboard.parseGameboardFromStringToInt(echoString);
 
 
-                output.println("tablica legit doszła kumplu" ); //// wyswietlane na kliencie
 
-                printGameboard(gameboard);
             }
 
         } catch (IOException e) {
             System.out.println("Coś poszło nie tak w echoerze " + e.getMessage());
         } finally {
             try {
-                socket.close();
+                socketP1.close();
             } catch (IOException e) {
                 //JA nie wiem co tu się odjaniepawla
             }

@@ -1,18 +1,18 @@
 public class ParsingGameboard {
 
-    public static int[][] parseGameboardFromStringToInt(String receivedGameboard){
+    public static String[][] parseGameboardFromStringToStringTab(String receivedGameboard){
 
-        int[][] gameboard = new int [10][10];
+        String[][] gameboard = new String [10][10];
         for(int i =0;i<10;i++){
             for(int j=0;j<10;j++){
-                gameboard[i][j]=Character.getNumericValue(receivedGameboard.charAt(((i+1)*(j+1)-1)));
+                gameboard[i][j]=String.valueOf(receivedGameboard.charAt(((i+1)*(j+1)-1)));
             }
         }
 
         return gameboard;
     }
 
-    public static String parseGameboardFromIntToString(int[][] gameboard){
+    public static String parseGameboardFromStringTabToString(String[][] gameboard){
         String toSendGameboard="";
         for(int i =0;i<10;i++){
             for(int j=0;j<10;j++){
