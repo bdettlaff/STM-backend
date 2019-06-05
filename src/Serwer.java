@@ -49,13 +49,14 @@ public class Serwer extends Thread {
             while (true) {
                 String inP1=inputP1.readLine();// P1 PS 0101010101001
                 String inP2=inputP2.readLine();
-                if(inP1!=null && turn){
+                if(inP1!=null){
 
 
                     game(inP1,gameboardP1,gameboardP1enemy,outputP1);
-                    outputP2.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                    System.out.println("xddddd1");
+                    //outputP2.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
                 }
-                else if(inP2!=null && turn==false){
+                if(inP2!=null){
 
 
                     game(inP2,gameboardP2,gameboardP2enemy,outputP2);
@@ -78,13 +79,14 @@ public class Serwer extends Thread {
 
         GameLogic gameLogic = new GameLogic();
         {
-            String[]in=inP.split("");
+            String[]in=inP.split(" ");
             switch (in[1]){
                 case "PS":
                     if(in[0].equals("P1")) {
                         gameboardP1 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
                         gameboardP1enemy = ParsingGameboard.createEmptyGameboard();
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                        System.out.println("xddddd");
                     }
                     if(in[0].equals("P2")) {
                         gameboardP2 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
