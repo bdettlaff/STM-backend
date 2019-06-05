@@ -21,4 +21,13 @@ public class ParsingGameboard {
         }
         return toSendGameboard;
     }
+    public static String[][] createEmptyGameboard(){
+        String[][] game = new String [10][10];
+        for(int i =0;i<10;i++){
+            for(int j=0;j<10;j++){
+                game[i][j]="O";
+            }
+        }
+        return game;
+    }
 }

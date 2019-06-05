@@ -10,7 +10,11 @@ public class Serwer extends Thread {
     private int start;
     private int end;
 
-
+    boolean turn=true;// P1=true
+    String[][] gameboardP1=null;
+    String[][] gameboardP1enemy=null;
+    String[][] gameboardP2=null;
+    String[][] gameboardP2enemy=null;
     public int sumA;
     public int sumB;
     public int wynik;
@@ -27,7 +31,8 @@ public class Serwer extends Thread {
 
         String P1="P1";
         String P2 ="P2";
-        boolean turn=true;
+
+
 
         try {
             //DOBRA PRAKTYKA dawać input jako BufferedReader i output jako PrintWriter
@@ -37,11 +42,24 @@ public class Serwer extends Thread {
             BufferedReader inputP2 = new BufferedReader(
                     new InputStreamReader(socketP2.getInputStream()));
             PrintWriter outputP2 = new PrintWriter(socketP2.getOutputStream(), true);
+            outputP1.println(P1);
+            outputP2.println(P2);
+
 
             while (true) {
+                String inP1=inputP1.readLine();// P1 PS 0101010101001
+                String inP2=inputP2.readLine();
+                if(inP1!=null && turn){
 
 
+                    game(inP1,gameboardP1,gameboardP1enemy,outputP1);
+                    outputP2.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                }
+                else if(inP2!=null && turn==false){
 
+
+                    game(inP2,gameboardP2,gameboardP2enemy,outputP2);
+                }
 
             }
 
@@ -53,6 +71,60 @@ public class Serwer extends Thread {
             } catch (IOException e) {
                 //JA nie wiem co tu się odjaniepawla
             }
+        }
+    }
+
+    public void game(String inP,String[][] gameboardWithShips,String[][] gameboardWithShots,PrintWriter outputP){
+
+        GameLogic gameLogic = new GameLogic();
+        {
+            String[]in=inP.split("");
+            switch (in[1]){
+                case "PS":
+                    if(in[0].equals("P1")) {
+                        gameboardP1 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
+                        gameboardP1enemy = ParsingGameboard.createEmptyGameboard();
+                        outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                    }
+                    if(in[0].equals("P2")) {
+                        gameboardP2 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
+                        gameboardP2enemy = ParsingGameboard.createEmptyGameboard();
+                        outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                    }
+
+                    break;
+                case "SH":
+                    if(in[0].equals("P1")) {
+                        if (gameLogic.checkShot(in[2], gameboardP2, gameboardP1enemy)) {
+                            gameLogic.shot(in[2], gameboardP2, gameboardP1enemy);
+                            if(gameLogic.checkWin(gameboardP2)){
+                                outputP.println("Win");
+                                break;
+                            }
+                            outputP.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                            turn = !turn;
+                        } else {
+                            outputP.println("Błędny strzał");
+                        }
+                    }
+                    if(in[0].equals("P2")) {
+                        if (gameLogic.checkShot(in[2], gameboardP1, gameboardP2enemy)) {
+                            gameLogic.shot(in[2], gameboardP1, gameboardP2enemy);
+                            if(gameLogic.checkWin(gameboardP1)){
+                                outputP.println("Win");
+                                break;
+                            }
+                            outputP.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                            turn = !turn;
+                        } else {
+                            outputP.println("Błędny strzał");
+                        }
+                    }
+
+
+                    break;
+            }
+
         }
     }
 
