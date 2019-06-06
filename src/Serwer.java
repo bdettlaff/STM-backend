@@ -7,8 +7,7 @@ import java.net.Socket;
 public class Serwer extends Thread {
     private Socket socketP1;
     private Socket socketP2;
-    private int start;
-    private int end;
+
 
     boolean turn=true;// P1=true
     String[][] gameboardP1=null;
@@ -23,8 +22,6 @@ public class Serwer extends Thread {
     }
 
     @Override
-
-
     public void run() {
 
         String P1="P1";
@@ -45,9 +42,7 @@ public class Serwer extends Thread {
 
 
             while (true) {
-                //String inP1=inputP1.readLine();// P1 PS 0101010101001
                 String inP1;
-                //String inP2=inputP2.readLine();
                 String inP2;
                 if((inP1=inputP1.readLine())!=null){
 
@@ -69,7 +64,6 @@ public class Serwer extends Thread {
             try {
                 socketP1.close();
             } catch (IOException e) {
-                //JA nie wiem co tu się odjaniepawla
             }
         }
     }
