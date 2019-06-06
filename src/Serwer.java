@@ -52,13 +52,13 @@ public class Serwer extends Thread {
                 if((inP1=inputP1.readLine())!=null){
 
 
-                    game(inP1,gameboardP1,gameboardP1enemy,outputP1,outputP2);
+                    game(inP1,outputP1,outputP2);
 
                 }
                 if((inP2=inputP2.readLine())!=null){
 
 
-                    game(inP2,gameboardP2,gameboardP2enemy,outputP2,outputP1);
+                    game(inP2,outputP2,outputP1);
                 }
 
             }
@@ -74,7 +74,7 @@ public class Serwer extends Thread {
         }
     }
 
-    public void game(String inP,String[][] gameboardWithShips,String[][] gameboardWithShots,PrintWriter outputP,PrintWriter outputPEnemy){
+    public void game(String inP,PrintWriter outputP,PrintWriter outputPEnemy){
 
         GameLogic gameLogic = new GameLogic();
         {
