@@ -97,8 +97,8 @@ public class Serwer extends Thread {
                     break;
                 case "SH":
                     if(in[0].equals("P1")) {
-                        if (gameLogic.checkShot(in[2], gameboardP2, gameboardP1enemy)) {
-                            gameLogic.shot(in[2], gameboardP2, gameboardP1enemy);
+                        if (gameLogic.checkShot(in[2]+" "+in[3], gameboardP2, gameboardP1enemy)) {
+                            gameLogic.shot(in[2]+" "+in[3], gameboardP2, gameboardP1enemy);
                             if(gameLogic.checkWin(gameboardP2)){
                                 outputP.println("Win");
                                 break;
@@ -110,8 +110,8 @@ public class Serwer extends Thread {
                         }
                     }
                     if(in[0].equals("P2")) {
-                        if (gameLogic.checkShot(in[2], gameboardP1, gameboardP2enemy)) {
-                            gameLogic.shot(in[2], gameboardP1, gameboardP2enemy);
+                        if (gameLogic.checkShot(in[2]+" "+in[3], gameboardP1, gameboardP2enemy)) {
+                            gameLogic.shot(in[2]+" "+in[3], gameboardP1, gameboardP2enemy);
                             if(gameLogic.checkWin(gameboardP1)){
                                 outputP.println("Win");
                                 break;

@@ -10,15 +10,16 @@ public class GameLogic {
 
     public boolean checkShot(String shot,String[][] gameboardWithships,String[][] gameboardWithShots){
         //czy strzał był dozwolony
-        String[] ij = shot.split(".");
+        String[] ij = shot.split(" ");
+        System.out.println(shot);
         if(gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])] != "X" || gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])] != "H"){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public String shot(String shot,String[][] gameboardWithships,String[][] gameboardWithShots){
-        String[] ij = shot.split(".");
+        String[] ij = shot.split(" ");
         if(gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])].equals("O")){
             gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])]="X";
             gameboardWithShots[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])]="X";
