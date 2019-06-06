@@ -15,9 +15,7 @@ public class Serwer extends Thread {
     String[][] gameboardP1enemy=null;
     String[][] gameboardP2=null;
     String[][] gameboardP2enemy=null;
-    public int sumA;
-    public int sumB;
-    public int wynik;
+
 
     public Serwer(Socket socketP1,Socket socketP2) {
         this.socketP1 = socketP1;
@@ -47,19 +45,20 @@ public class Serwer extends Thread {
 
 
             while (true) {
-                String inP1=inputP1.readLine();// P1 PS 0101010101001
-                String inP2=inputP2.readLine();
-                if(inP1!=null){
+                //String inP1=inputP1.readLine();// P1 PS 0101010101001
+                String inP1;
+                //String inP2=inputP2.readLine();
+                String inP2;
+                if((inP1=inputP1.readLine())!=null){
 
 
-                    game(inP1,gameboardP1,gameboardP1enemy,outputP1);
-                    System.out.println("xddddd1");
-                    //outputP2.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                    game(inP1,gameboardP1,gameboardP1enemy,outputP1,outputP2);
+
                 }
-                if(inP2!=null){
+                if((inP2=inputP2.readLine())!=null){
 
 
-                    game(inP2,gameboardP2,gameboardP2enemy,outputP2);
+                    game(inP2,gameboardP2,gameboardP2enemy,outputP2,outputP1);
                 }
 
             }
@@ -75,7 +74,7 @@ public class Serwer extends Thread {
         }
     }
 
-    public void game(String inP,String[][] gameboardWithShips,String[][] gameboardWithShots,PrintWriter outputP){
+    public void game(String inP,String[][] gameboardWithShips,String[][] gameboardWithShots,PrintWriter outputP,PrintWriter outputPEnemy){
 
         GameLogic gameLogic = new GameLogic();
         {
@@ -86,26 +85,31 @@ public class Serwer extends Thread {
                         gameboardP1 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
                         gameboardP1enemy = ParsingGameboard.createEmptyGameboard();
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
-                        System.out.println("xddddd");
+                        outputP.println("Twoja Tura");
                     }
                     if(in[0].equals("P2")) {
                         gameboardP2 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
                         gameboardP2enemy = ParsingGameboard.createEmptyGameboard();
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                        outputP.println("Tura Przeciwnika");
                     }
 
                     break;
                 case "SH":
-                    if(in[0].equals("P1")) {
+                    if(in[0].equals("P1") && turn) {
                         if (gameLogic.checkShot(in[2]+" "+in[3], gameboardP2, gameboardP1enemy)) {
                             gameLogic.shot(in[2]+" "+in[3], gameboardP2, gameboardP1enemy);
                             if(gameLogic.checkWin(gameboardP2)){
                                 outputP.println("Win");
+                                outputPEnemy.println("Lost");
                                 break;
                             }
+                            turn=!turn;
+                            outputPEnemy.println("Twoja Tura");
                             outputP.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
-                            turn = !turn;
+                            outputP.println("Tura Przeciwnika");
                         } else {
+                            outputP.println("Twoja Tura");
                             outputP.println("Błędny strzał");
                         }
                     }
@@ -114,11 +118,15 @@ public class Serwer extends Thread {
                             gameLogic.shot(in[2]+" "+in[3], gameboardP1, gameboardP2enemy);
                             if(gameLogic.checkWin(gameboardP1)){
                                 outputP.println("Win");
+                                outputPEnemy.println("Lost");
                                 break;
                             }
+                            turn=!turn;
+                            outputPEnemy.println("Twoja Tura");
                             outputP.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
-                            turn = !turn;
+                            outputP.println("Tura Przeciwnika");
                         } else {
+                            outputP.println("Twoja Tura");
                             outputP.println("Błędny strzał");
                         }
                     }

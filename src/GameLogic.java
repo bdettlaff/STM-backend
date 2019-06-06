@@ -11,7 +11,6 @@ public class GameLogic {
     public boolean checkShot(String shot,String[][] gameboardWithships,String[][] gameboardWithShots){
         //czy strzał był dozwolony
         String[] ij = shot.split(" ");
-        System.out.println(shot);
         if(gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])] != "X" || gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])] != "H"){
             return true;
         }
@@ -42,10 +41,6 @@ public class GameLogic {
             }
         }
         return true;
-
-    }
-
-    public void whoseTurn(){
 
     }
 }
