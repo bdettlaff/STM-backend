@@ -14,6 +14,7 @@ public class Serwer extends Thread {
     String[][] gameboardP1enemy=null;
     String[][] gameboardP2=null;
     String[][] gameboardP2enemy=null;
+    GameLogic gameLogic = new GameLogic();
 
 
     public Serwer(Socket socketP1,Socket socketP2) {
@@ -39,25 +40,32 @@ public class Serwer extends Thread {
             PrintWriter outputP2 = new PrintWriter(socketP2.getOutputStream(), true);
             outputP1.println(P1);
             outputP2.println(P2);
+            String inP1=null;
+            String inP2=null;
+            if((inP1=inputP1.readLine())!=null){
 
 
-            while (true) {
-                String inP1;
-                String inP2;
-                if((inP1=inputP1.readLine())!=null){
-
-
-                    game(inP1,outputP1,outputP2);
-
-                }
-                if((inP2=inputP2.readLine())!=null){
-
-
-                    game(inP2,outputP2,outputP1);
-                }
+                game(inP1,outputP1,outputP2);
 
             }
+            if((inP2=inputP2.readLine())!=null){
 
+
+                game(inP2,outputP2,outputP1);
+            }
+
+            while (true) {
+                inP1=null;
+                inP2=null;
+                if(gameLogic.whoseTurn()){
+                    inP1=inputP1.readLine();
+                    game(inP1,outputP1,outputP2);
+                }
+                else{
+                    inP2=inputP2.readLine();
+                    game(inP2,outputP2,outputP1);
+                }
+            }
         } catch (IOException e) {
             System.out.println("Coś poszło nie tak w echoerze " + e.getMessage());
         } finally {
@@ -70,7 +78,7 @@ public class Serwer extends Thread {
 
     public void game(String inP,PrintWriter outputP,PrintWriter outputPEnemy){
 
-        GameLogic gameLogic = new GameLogic();
+
         {
             String[]in=inP.split(" ");
             switch (in[1]){
@@ -85,23 +93,53 @@ public class Serwer extends Thread {
                         gameboardP2 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
                         gameboardP2enemy = ParsingGameboard.createEmptyGameboard();
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+
                         outputP.println("Tura Przeciwnika");
+                        outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
                     }
 
                     break;
                 case "SH":
-                    if(in[0].equals("P1") && turn) {
+                    if(in[0].equals("P1")) {
                         if (gameLogic.checkShot(in[2]+" "+in[3], gameboardP2, gameboardP1enemy)) {
                             gameLogic.shot(in[2]+" "+in[3], gameboardP2, gameboardP1enemy);
                             if(gameLogic.checkWin(gameboardP2)){
                                 outputP.println("Win");
                                 outputPEnemy.println("Lost");
+                                try {
+                                    socketP1.close();
+                                    socketP2.close();
+                                }
+                                catch (Exception e){
+
+                                }
                                 break;
                             }
-                            turn=!turn;
-                            outputPEnemy.println("Twoja Tura");
-                            outputP.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
-                            outputP.println("Tura Przeciwnika");
+                            if(!gameLogic.whoseTurn()) {
+                                outputPEnemy.println("Twoja Tura");
+                                outputP.println("GB "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)
+                                                + " "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                                outputP.println("Tura Przeciwnika");
+                                outputP.println("GB "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)
+                                                + " "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                            }
+                            else{
+                                outputPEnemy.println("Tura Przeciwnika");
+                                outputPEnemy.println("GB "
+                                                     + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)
+                                                     + " "
+                                                     + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                                outputP.println("GB "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)
+                                                + " "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                                outputP.println("Twoja Tura");
+
+                            }
                         } else {
                             outputP.println("Twoja Tura");
                             outputP.println("Błędny strzał");
@@ -113,12 +151,39 @@ public class Serwer extends Thread {
                             if(gameLogic.checkWin(gameboardP1)){
                                 outputP.println("Win");
                                 outputPEnemy.println("Lost");
+                                try {
+                                    socketP1.close();
+                                    socketP2.close();
+                                }
+                                catch (Exception e){
+
+                                }
                                 break;
                             }
-                            turn=!turn;
-                            outputPEnemy.println("Twoja Tura");
-                            outputP.println("GB "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
-                            outputP.println("Tura Przeciwnika");
+                            if(gameLogic.whoseTurn()) {
+                                outputPEnemy.println("Twoja Tura");
+                                outputP.println("GB "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)
+                                                + " "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                                outputP.println("Tura Przeciwnika");
+                                outputP.println("GB "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)
+                                                + " "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                            }
+                            else{
+                                outputPEnemy.println("Tura Przeciwnika");
+                                outputPEnemy.println("GB "
+                                                     + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)
+                                                     + " "
+                                                     + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
+                                outputP.println("GB "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)
+                                                + " "
+                                                + ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+                                outputP.println("Twoja Tura");
+                            }
                         } else {
                             outputP.println("Twoja Tura");
                             outputP.println("Błędny strzał");

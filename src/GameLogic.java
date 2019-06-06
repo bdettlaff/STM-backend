@@ -6,7 +6,7 @@ public class GameLogic {
 //H-TRAFIONY STATEK
 
 
-
+boolean turn= true;
 
     public boolean checkShot(String shot,String[][] gameboardWithships,String[][] gameboardWithShots){
         //czy strzał był dozwolony
@@ -22,6 +22,7 @@ public class GameLogic {
         if(gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])].equals("O")){
             gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])]="X";
             gameboardWithShots[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])]="X";
+            turn=!turn;
         }
         else{
             gameboardWithships[Integer.parseInt(ij[0])][Integer.parseInt(ij[1])]="H";
@@ -42,5 +43,8 @@ public class GameLogic {
         }
         return true;
 
+    }
+    public boolean whoseTurn(){
+        return turn;
     }
 }
