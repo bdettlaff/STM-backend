@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) {
@@ -7,10 +8,14 @@ public class Main {
 
 
 
-        try (ServerSocket serverSocket = new ServerSocket(5000)) {
+        try  {
+            ServerSocket serverSocket = new ServerSocket(5000);
+
 
             while (true) {
-                new Echoer(serverSocket.accept()).start();
+                Socket socketP1 =  serverSocket.accept();
+                Socket socketP2 = serverSocket.accept();
+                new Serwer(socketP1,socketP2).start();
                 System.out.println("cos");
 
             }
