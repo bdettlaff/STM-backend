@@ -53,6 +53,10 @@ public class Serwer extends Thread {
 
                 game(inP2,outputP2,outputP1);
             }
+            outputP1.println("Twoja Tura");
+            outputP2.println("Tura Przeciwnika");
+            outputP2.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
+
 
             while (true) {
                 inP1=null;
@@ -87,14 +91,14 @@ public class Serwer extends Thread {
                         gameboardP1 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
                         gameboardP1enemy = ParsingGameboard.createEmptyGameboard();
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP1enemy));
-                        outputP.println("Twoja Tura");
+                        outputP.println("Zaczekaj aż przeciwnik ustawi Statki");
                     }
                     if(in[0].equals("P2")) {
                         gameboardP2 = ParsingGameboard.parseGameboardFromStringToStringTab(in[2]);
                         gameboardP2enemy = ParsingGameboard.createEmptyGameboard();
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
 
-                        outputP.println("Tura Przeciwnika");
+                        outputP.println("Zaczekaj aż przeciwnik ustawi Statki");
                         outputP.println("PS "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2)+" "+ParsingGameboard.parseGameboardFromStringTabToString(gameboardP2enemy));
                     }
 
